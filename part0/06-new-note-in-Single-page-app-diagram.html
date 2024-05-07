@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>0.6: New note in Single page app diagram</title>
+  </head>
+  <body>
+    <pre class="mermaid">
+        sequenceDiagram
+        participant browser
+        participant server
+    
+        browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+        browser-->>server: {"content":"999","date":"2024-05-07T02:34:49.434Z"}
+        Note right of browser: The browser input a object to the server
+        activate server
+        server-->>browser: status code 201  
+        Note right of browser: the contents of which are manipulated with JavaScript that executes in the browser.
+        activate server  
+        deactivate server
+    </pre>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+    </script>
+  </body>
+</html>
