@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>04-answer-note-save-diagram</title>
+  </head>
+  <body>
+    <pre class="mermaid">
+        sequenceDiagram
+        participant browser
+        participant server
+    
+        browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
+        browser-->>server: note=some string by the user input
+        Note right of browser: The browser input some string to the server
+        activate server
+        server-->>browser: status code 302. This is a URL redirect to Location: /exampleapp/notes        
+        deactivate server
+
+        browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
+        activate server
+        server-->>browser: HTML document
+        deactivate server
+
+        browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+        activate server
+        server-->>browser: the css file
+        deactivate server
+
+        browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
+        activate server
+        server-->>browser: the JavaScript file
+        deactivate server
+
+        Note right of browser: The browser starts executing the JavaScript code that fetches the JSON from the server
+
+        browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+        activate server
+        server-->>browser: [{content: "bomboclat", date: "2024-05-06T17:55:18.592Z"}, ... ]
+        deactivate server
+
+        Note right of browser: The browser executes the callback function that renders the notes
+
+
+    </pre>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+    </script>
+  </body>
+</html>
