@@ -24,9 +24,9 @@ const App = () => {
   return (
     <div>
       <Display counter={counter} />
-      <Button onClick={increaseByOne} text="plus" />
-      <Button onClick={setToZero} text="zero" />
-      <Button onClick={decreaseByOne} text="minus" />
+      <Button onSmash={increaseByOne} text="plus" />
+      <Button onSmash={setToZero} text="zero" />
+      <Button onSmash={decreaseByOne} text="minus" />
     </div>
   )
 } 
