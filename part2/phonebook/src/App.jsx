@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import personService from "./services/persons";
 const App = () => {
   // const initialPersons = [
   //   { name: "Arto Hellas", number: "040-123456", id: 1 },
@@ -13,8 +13,7 @@ const App = () => {
   const [showAll, setShowAll] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      console.log("promise fulfilled");
+    personService.getAll().then((response) => {
       setPersons(response.data);
     });
   }, []);
@@ -29,19 +28,33 @@ const App = () => {
       alert("number is require");
       return;
     }
-    if (persons.filter((person) => person.name === newName).length) {
-      alert(`${newName} is already added to phonebook`);
+    const oldPerson = persons.filter((person) => person.name === newName);
+    if (oldPerson.length) {
+      const flag = window.confirm(
+        `${newName} is already added to phonebook,replace the old number with a new one?`
+      );
+      if (flag) {
+        personService
+          .update(oldPerson[0].id, { ...oldPerson[0], number: newNumber })
+          .then(() => {
+            personService.getAll().then((response) => {
+              setPersons(response.data);
+            });
+          });
+      }
       return;
     }
     const p = {
       name: newName,
-      id: persons.length + 1,
+      // id: persons.length + 1,
       number: newNumber,
     };
 
-    setPersons(persons.concat(p));
-    setNewName("");
-    setNewNumber("");
+    personService.create(p).then((response) => {
+      setPersons(persons.concat(response.data));
+      setNewName("");
+      setNewNumber("");
+    });
   };
 
   const changeName = (e) => {
@@ -56,6 +69,17 @@ const App = () => {
       )
     : persons;
 
+  const deletePerson = (person) => {
+    const flag = window.confirm(`delete ${person.name}`);
+    if (flag) {
+      return personService.deletePerson(person.id).then(() => {
+        // console.log(res);
+        personService.getAll().then((response) => {
+          setPersons(response.data);
+        });
+      });
+    }
+  };
   return (
     <div>
       <h1>Phonebook</h1>
@@ -82,7 +106,8 @@ const App = () => {
       <div>
         {filteredPersons.map((person) => (
           <div key={person.id}>
-            {person.name}: {person.number}
+            {person.name}: {person.number}{" "}
+            <button onClick={() => deletePerson(person)}>delete</button>
           </div>
         ))}
       </div>
