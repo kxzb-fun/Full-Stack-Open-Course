@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import personService from "./services/persons";
+import Notification from "./components/Notification";
 const App = () => {
   // const initialPersons = [
   //   { name: "Arto Hellas", number: "040-123456", id: 1 },
@@ -11,6 +12,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [showAll, setShowAll] = useState("");
+  const [messageInfo, setMessageInfo] = useState({ message: null, type: "" });
 
   useEffect(() => {
     personService.getAll().then((response) => {
@@ -51,6 +53,13 @@ const App = () => {
     };
 
     personService.create(p).then((response) => {
+      setMessageInfo({
+        message: `added ${response.data.name}`,
+        type: "succeed",
+      });
+      setTimeout(() => {
+        setMessageInfo({ message: null });
+      }, 5000);
       setPersons(persons.concat(response.data));
       setNewName("");
       setNewNumber("");
@@ -72,17 +81,27 @@ const App = () => {
   const deletePerson = (person) => {
     const flag = window.confirm(`delete ${person.name}`);
     if (flag) {
-      return personService.deletePerson(person.id).then(() => {
-        // console.log(res);
-        personService.getAll().then((response) => {
-          setPersons(response.data);
+      return personService
+        .deletePerson(person.id)
+        .then(() => {
+          // console.log(res);
+          personService.getAll().then((response) => {
+            setPersons(response.data);
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+          setMessageInfo({ message: `added ${err.message}`, type: "error" });
+          setTimeout(() => {
+            setMessageInfo({ message: null });
+          }, 5000);
         });
-      });
     }
   };
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification message={messageInfo.message} type={messageInfo.type} />
       filter shown with{" "}
       <input
         value={showAll}

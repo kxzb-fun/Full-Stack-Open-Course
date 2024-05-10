@@ -3,7 +3,7 @@
     {
       "name": "Dan Abramov",
       "number": "12-43-234345",
-      "id": "3"
+      "id": 3
     },
     {
       "name": "Mary Poppendieck",
@@ -19,6 +19,16 @@
       "id": "ee78",
       "name": "Zhang san",
       "number": "011-5694956"
+    },
+    {
+      "id": "daa3",
+      "name": "e",
+      "number": "123"
+    },
+    {
+      "id": "90a1",
+      "name": "3",
+      "number": "333"
     }
   ]
 }
