@@ -52,20 +52,29 @@ const App = () => {
       number: newNumber,
     };
 
-    personService.create(p).then((response) => {
-      setMessageInfo({
-        message: `added ${response.data.name}`,
-        type: "succeed",
+    personService
+      .create(p)
+      .then((response) => {
+        showInfo({name: response.data.name, type: 'succeed'})
+        setPersons(persons.concat(response.data));
+        setNewName("");
+        setNewNumber("");
+      })
+      .catch((error) => {
+        // this is the way to access the error message
+        console.log(error.response.data.error);
+        showInfo({name: error.response.data.error, type: 'error'})
       });
-      setTimeout(() => {
-        setMessageInfo({ message: null });
-      }, 5000);
-      setPersons(persons.concat(response.data));
-      setNewName("");
-      setNewNumber("");
-    });
   };
-
+  function showInfo(data) {
+    setMessageInfo({
+      message: `added ${data.name}`,
+      type: data.type,
+    });
+    setTimeout(() => {
+      setMessageInfo({ message: null });
+    }, 5000);
+  }
   const changeName = (e) => {
     setNewName(e.target.value);
   };
